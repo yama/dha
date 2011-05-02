@@ -93,9 +93,9 @@ switch($e->name)
 		{
 			// フォームから値を取得
 			$form_name  = 'approval_and_level' . $pub_level;
-			$s_approval = ( isset( $_POST[ $form_name ] ) ) ? mysql_escape_string($_POST[ $form_name ]) : '0';
+			$s_approval = ( isset( $_POST[ $form_name ] ) ) ? $modx->db->escape($_POST[ $form_name ]) : '0';
 			$form_name  = 'comment_and_level' . $pub_level;
-			$s_comment  = ( isset( $_POST[ $form_name ] ) ) ? mysql_escape_string($_POST[ $form_name ]) : '';
+			$s_comment  = ( isset( $_POST[ $form_name ] ) ) ? $modx->db->escape($_POST[ $form_name ]) : '';
 
 			// 公開権限のない人がOnDocFormSaveに来たとき(ページ内容を編集したとき)は
 			// 「公開しない」にリセットする
@@ -198,37 +198,37 @@ switch($e->name)
 
 	if ($app_result)  { // すべての承認を受けた場合のみ処理
 
-		$introtext       = mysql_real_escape_string( $doc_data ['introtext'] );
-		$content         = mysql_real_escape_string( $doc_data ['content'] );
-		$pagetitle       = mysql_real_escape_string( $doc_data ['pagetitle'] );
-		$longtitle       = mysql_real_escape_string( $doc_data ['longtitle'] );
-		$type            = $doc_data ['type'];
-		$description     = mysql_real_escape_string( $doc_data ['description'] );
-		$alias           = mysql_real_escape_string( $doc_data ['alias'] );
-		$link_attributes = mysql_real_escape_string( $doc_data ['link_attributes'] );
-		$isfolder        = $doc_data ['isfolder'];
-		$richtext        = $doc_data ['richtext'];
-		$published       = $doc_data ['published'];
-		$parent          = $doc_data ['parent'];
-		$template        = $doc_data ['template'];
-		$menuindex       = $doc_data ['menuindex'];
-		$searchable      = $doc_data ['searchable'];
-		$cacheable       = $doc_data ['cacheable'];
-		$createdby       = $doc_data ['createdby'];
-		$createdon       = $doc_data ['createdon'];
-		$editedby        = $doc_data ['editedby'];
-		$editedon        = $doc_data ['editedon'];
-		$publishedby     = $doc_data ['publishedby'];
-		$publishedon     = $doc_data ['publishedon'];
-		$pub_date        = $doc_data ['pub_date'];
-		$unpub_date      = $doc_data ['unpub_date'];
-		$contentType     = mysql_real_escape_string( $doc_data ['contentType'] );
-		$contentdispo    = $doc_data ['content_dispo'];
-		$donthit         = $doc_data ['donthit'];
-		$menutitle       = mysql_real_escape_string( $doc_data ['menutitle'] );
-		$hidemenu        = $doc_data ['hidemenu'];
-		$deleted         = $doc_data ['deleted'];
-		$deletedon       = $doc_data ['deletedon'];
+		$introtext       = $modx->db->escape($doc_data['introtext'] );
+		$content         = $modx->db->escape($doc_data['content'] );
+		$pagetitle       = $modx->db->escape($doc_data['pagetitle'] );
+		$longtitle       = $modx->db->escape($doc_data['longtitle'] );
+		$type            = $doc_data['type'];
+		$description     = $modx->db->escape($doc_data['description'] );
+		$alias           = $modx->db->escape($doc_data['alias'] );
+		$link_attributes = $modx->db->escape($doc_data['link_attributes'] );
+		$isfolder        = $doc_data['isfolder'];
+		$richtext        = $doc_data['richtext'];
+		$published       = $doc_data['published'];
+		$parent          = $doc_data['parent'];
+		$template        = $doc_data['template'];
+		$menuindex       = $doc_data['menuindex'];
+		$searchable      = $doc_data['searchable'];
+		$cacheable       = $doc_data['cacheable'];
+		$createdby       = $doc_data['createdby'];
+		$createdon       = $doc_data['createdon'];
+		$editedby        = $doc_data['editedby'];
+		$editedon        = $doc_data['editedon'];
+		$publishedby     = $doc_data['publishedby'];
+		$publishedon     = $doc_data['publishedon'];
+		$pub_date        = $doc_data['pub_date'];
+		$unpub_date      = $doc_data['unpub_date'];
+		$contentType     = $modx->db->escape($doc_data['contentType'] );
+		$contentdispo    = $doc_data['content_dispo'];
+		$donthit         = $doc_data['donthit'];
+		$menutitle       = $modx->db->escape($doc_data['menutitle'] );
+		$hidemenu        = $doc_data['hidemenu'];
+		$deleted         = $doc_data['deleted'];
+		$deletedon       = $doc_data['deletedon'];
 
 		// 履歴に登録
 		$sql = "INSERT INTO $tbl_history (id,introtext,content, pagetitle, longtitle, type, description, alias, link_attributes, isfolder, richtext, published, parent, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, publishedby, publishedon, pub_date, unpub_date, contentType, content_dispo, donthit, menutitle, hidemenu)
@@ -257,8 +257,8 @@ switch($e->name)
 		$a_tvs_app = array();
 		if( $modx->db->getRecordCount( $result ) >= 1 ) {
 			while( $row = $modx->db->getRow( $result ) ) {
-				$a_tvs[] = "('" . $row['id'] . "','" . $row['tmplvarid'] . "','" . $row['contentid'] . "', '" . mysql_real_escape_string( $row['value'] ) . "', '" . $editedon . "')";
-				$a_tvs_app[] = "('" . $row['id'] . "','" . $row['tmplvarid'] . "','" . $row['contentid'] . "', '" . mysql_real_escape_string( $row['value'] ) . "')";
+				$a_tvs[] = "('" . $row['id'] . "','" . $row['tmplvarid'] . "','" . $row['contentid'] . "', '" . $modx->db->escape($row['value'] ) . "', '" . $editedon . "')";
+				$a_tvs_app[] = "('" . $row['id'] . "','" . $row['tmplvarid'] . "','" . $row['contentid'] . "', '" . $modx->db->escape($row['value'] ) . "')";
 			}
 		}
 
@@ -274,9 +274,9 @@ switch($e->name)
 	}
 
 	// OnDocFormSaveイベントのときに削除状態のときは承認保管箱も削除状態にする
-	$published       = $doc_data ['published'];
-	$deleted         = $doc_data ['deleted'];
-	$deletedon       = $doc_data ['deletedon'];
+	$published       = $doc_data['published'];
+	$deleted         = $doc_data['deleted'];
+	$deletedon       = $doc_data['deletedon'];
 
 	if ( $deleted == 1 ) {
 		// 承認保管箱に当該のデータが存在するか?
@@ -522,35 +522,35 @@ switch($e->name)
 		$doc_data = array();
 		$doc_data = $modx->db->getRow( $result );
 
-		$modx->documentObject['introtext']       = $doc_data ['introtext'];
-		$modx->documentObject['content']         = $doc_data ['content'];
-		$modx->documentObject['pagetitle']       = $doc_data ['pagetitle'];
-		$modx->documentObject['longtitle']       = $doc_data ['longtitle'];
-		$modx->documentObject['type']            = $doc_data ['type'];
-		$modx->documentObject['description']     = $doc_data ['description'];
-		$modx->documentObject['alias']           = $doc_data ['alias'];
-		$modx->documentObject['link_attributes'] = $doc_data ['link_attributes'];
-		$modx->documentObject['isfolder']        = $doc_data ['isfolder'];
-		$modx->documentObject['richtext']        = $doc_data ['richtext'];
-		$modx->documentObject['published']       = $doc_data ['published'];
-		$modx->documentObject['parent']          = $doc_data ['parent'];
-		$modx->documentObject['template']        = $doc_data ['template'];
-		$modx->documentObject['menuindex']       = $doc_data ['menuindex'];
-		$modx->documentObject['searchable']      = $doc_data ['searchable'];
-		$modx->documentObject['cacheable']       = $doc_data ['cacheable'];
-		$modx->documentObject['createdby']       = $doc_data ['createdby'];
-		$modx->documentObject['createdon']       = $doc_data ['createdon'];
-		$modx->documentObject['editedby']        = $doc_data ['editedby'];
-		$modx->documentObject['editedon']        = $doc_data ['editedon'];
-		$modx->documentObject['publishedby']     = $doc_data ['publishedby'];
-		$modx->documentObject['publishedon']     = $doc_data ['publishedon'];
-		$modx->documentObject['pub_date']        = $doc_data ['pub_date'];
-		$modx->documentObject['unpub_date']      = $doc_data ['unpub_date'];
-		$modx->documentObject['contentType']     = $doc_data ['contentType'];
-		$modx->documentObject['content_dispo']   = $doc_data ['content_dispo'];
-		$modx->documentObject['donthit']         = $doc_data ['donthit'];
-		$modx->documentObject['menutitle']       = $doc_data ['menutitle'];
-		$modx->documentObject['hidemenu']        = $doc_data ['hidemenu'];
+		$modx->documentObject['introtext']       = $doc_data['introtext'];
+		$modx->documentObject['content']         = $doc_data['content'];
+		$modx->documentObject['pagetitle']       = $doc_data['pagetitle'];
+		$modx->documentObject['longtitle']       = $doc_data['longtitle'];
+		$modx->documentObject['type']            = $doc_data['type'];
+		$modx->documentObject['description']     = $doc_data['description'];
+		$modx->documentObject['alias']           = $doc_data['alias'];
+		$modx->documentObject['link_attributes'] = $doc_data['link_attributes'];
+		$modx->documentObject['isfolder']        = $doc_data['isfolder'];
+		$modx->documentObject['richtext']        = $doc_data['richtext'];
+		$modx->documentObject['published']       = $doc_data['published'];
+		$modx->documentObject['parent']          = $doc_data['parent'];
+		$modx->documentObject['template']        = $doc_data['template'];
+		$modx->documentObject['menuindex']       = $doc_data['menuindex'];
+		$modx->documentObject['searchable']      = $doc_data['searchable'];
+		$modx->documentObject['cacheable']       = $doc_data['cacheable'];
+		$modx->documentObject['createdby']       = $doc_data['createdby'];
+		$modx->documentObject['createdon']       = $doc_data['createdon'];
+		$modx->documentObject['editedby']        = $doc_data['editedby'];
+		$modx->documentObject['editedon']        = $doc_data['editedon'];
+		$modx->documentObject['publishedby']     = $doc_data['publishedby'];
+		$modx->documentObject['publishedon']     = $doc_data['publishedon'];
+		$modx->documentObject['pub_date']        = $doc_data['pub_date'];
+		$modx->documentObject['unpub_date']      = $doc_data['unpub_date'];
+		$modx->documentObject['contentType']     = $doc_data['contentType'];
+		$modx->documentObject['content_dispo']   = $doc_data['content_dispo'];
+		$modx->documentObject['donthit']         = $doc_data['donthit'];
+		$modx->documentObject['menutitle']       = $doc_data['menutitle'];
+		$modx->documentObject['hidemenu']        = $doc_data['hidemenu'];
 
 
 		// テンプレート変数読み込み
@@ -558,7 +558,7 @@ switch($e->name)
 		$sql .= "FROM " . $modx->getFullTableName("site_tmplvars") . " tv ";
 		$sql .= "INNER JOIN " . $modx->getFullTableName("site_tmplvar_templates")." tvtpl ON tvtpl.tmplvarid = tv.id ";
 		$sql .= "LEFT JOIN " . $search_tvs_table." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $docid. "' ";
-		$sql .= "WHERE tvtpl.templateid = '" . $doc_data ['template'] . "'";
+		$sql .= "WHERE tvtpl.templateid = '" . $doc_data['template'] . "'";
 		if ( ( $publish_history_id != 0 ) ) {
 			$sql .= " AND ";
 			$sql .= " tvc.editedon = '" . $publish_history_id . "'";
@@ -602,9 +602,9 @@ switch($e->name)
 	$doc_data = $modx->getDocumentObject( 'id' , $docid );
 
 	// 削除状態のときは承認保管箱も削除状態にする。逆のときは同様で非削除に
-	$published       = $doc_data ['published'];
-	$deleted         = $doc_data ['deleted'];
-	$deletedon       = $doc_data ['deletedon'];
+	$published       = $doc_data['published'];
+	$deleted         = $doc_data['deleted'];
+	$deletedon       = $doc_data['deletedon'];
 
 	// 承認保管箱に当該のデータが存在するか?
 	// SQL文構築
@@ -641,9 +641,9 @@ switch($e->name)
 		$doc_data = $modx->getDocumentObject( 'id' , $process_id );
 
 		// 削除状態のときは承認保管箱も削除状態にする。逆のときは同様で非削除に
-		$published       = $doc_data ['published'];
-		$deleted         = $doc_data ['deleted'];
-		$deletedon       = $doc_data ['deletedon'];
+		$published       = $doc_data['published'];
+		$deleted         = $doc_data['deleted'];
+		$deletedon       = $doc_data['deletedon'];
 
 		// 承認保管箱に当該のデータが存在するか?
 		// SQL文構築

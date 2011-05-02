@@ -74,7 +74,8 @@ class DHA
 			if ( $rolesw != "role" ) $request_err_flag = 1;
 		}
 		
-		if ( (!is_numeric($docid))||(!is_numeric($hisid))||($request_err_flag == 1) ) {
+		if ( (!is_numeric($docid))||(!is_numeric($hisid))||($request_err_flag == 1) )
+		{
 			$modx->webAlert( "処理を停止しました。本機能は編集画面より呼び出してください。" );
 			echo "処理を停止しました。本機能は編集画面より呼び出してください。";
 			exit;
@@ -88,7 +89,7 @@ class DHA
 		// ----------------------------------------------------------------
 		// コンテンツデータをゲット
 		// ----------------------------------------------------------------
-		$result = $modx->db->select('*', $tbl_content , " id='{$docid}' " );
+		$result = $modx->db->select('*', $tbl_content , " id='{$docid}' ");
 		
 		// データ取り出し
 		$a_docs = array();
@@ -135,7 +136,7 @@ class DHA
 		
 		// データ取り出し
 		$a_docs = array();
-		$s_drop_down_history = "";
+		$s_drop_down_history = '';
 		if( $modx->db->getRecordCount( $result ) >= 1 )
 		{
 			while($row = $modx->db->getRow($result))
@@ -154,16 +155,17 @@ class DHA
 			}
 		}
 		
-		if (!isset($a_docs[ $hisid ]))
+		if (!isset($a_docs[$hisid]))
 		{
 			$modx->webAlert( "承認を受けたページデータが存在しません。" );
 			echo "承認を受けたページデータが存在しません。";
 			exit;
-		} else {
-			$doc_data = array();
-			$doc_data = $a_docs[ $hisid ];
 		}
-		
+		else
+		{
+			$doc_data = array();
+			$doc_data = $a_docs[$hisid];
+		}
 		// Diffで比較対照となる過去データ取り出し
 		$s_old_page        = $doc_data['content'];
 		$s_old_pagetitle   = $doc_data['pagetitle'];
@@ -188,8 +190,10 @@ class DHA
 		$rowCount= $modx->recordCount($rs);
 		$tmplvars = array();
 		$s_old_tvs = "";
-		if ($rowCount > 0) {
-			for ($i= 0; $i < $rowCount; $i++) {
+		if ($rowCount > 0)
+		{
+			for ($i= 0; $i < $rowCount; $i++)
+			{
 				$row_tvs= $modx->fetchRow($rs);
 				$tmplvars []= "[" . $row_tvs['caption'] . "]" . $row_tvs['value'];
 			}
@@ -207,7 +211,7 @@ class DHA
 		if ( ( isset( $rolesw ) ) && ( $rolesw == "role" ) ) {
 			// 本文データのロールバック
 			// ----------------------------------------------------------------
-			$s_old_page = mysql_escape_string($s_old_page);
+			$s_old_page = $modx->db->escape($s_old_page);
 		
 			// SQL文構築
 			$sql_string_where  = "";
@@ -250,7 +254,7 @@ class DHA
 				$a_tvs_app = array();
 				if( $modx->db->getRecordCount( $result ) >= 1 ) {
 					while( $row = $modx->db->getRow( $result ) ) {
-						$a_tvs_app[] = "('" . $row['id'] . "','" . $row['tmplvarid'] . "','" . $row['contentid'] . "', '" . mysql_escape_string( $row['value'] ) . "')";
+						$a_tvs_app[] = "('" . $row['id'] . "','" . $row['tmplvarid'] . "','" . $row['contentid'] . "', '" . $modx->db->escape( $row['value'] ) . "')";
 					}
 				}
 		
@@ -309,10 +313,11 @@ class DHA
 		
 		// Diff結果データ加工
 		$publish_diff_data = $renderer->render($diff);
-		while ( preg_match('|\n\n|' , $publish_diff_data ) ) $publish_diff_data = preg_replace('|\n\n|' , "\n" , $publish_diff_data );
+		while(preg_match('|\n\n|' , $publish_diff_data)) $publish_diff_data = preg_replace('|\n\n|' , "\n" , $publish_diff_data );
 		$publish_diff_data = str_replace("\n", "<br />\n", $publish_diff_data );
-		if ( $publish_diff_data == "" ) {
-			$publish_diff_data = "二つのページ内容に違いはありません。";
+		if($publish_diff_data == '')
+		{
+			$publish_diff_data = '二つのページ内容に違いはありません。';
 		}
 		
 		// ----------------------------------------------------------------
@@ -425,7 +430,7 @@ class DHA
 			<!-- Preview -->
 			<div class="tab-page" id="tabPreviewNow">
 				<h2 class="tab">編集中のページ内容</h2>
-				<script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPreviewNow" ) );</script>
+				<script type="text/javascript">tpSettings.addTabPage(document.getElementById("tabPreviewNow"));</script>
 		
 				<table width="96%" border="0"><tr><td>ここには最後に保存した編集内容をプレビューしています。</td></tr>
 					<tr><td><iframe name="previewnow" frameborder="0" width="100%" height="400" id="previewnowIframe" src="../index.php?id=<?php echo $docid; ?>&preview_sw=1&manprev=z"></iframe></td></tr>
@@ -439,7 +444,8 @@ class DHA
 				<script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPreview" ), previewOlddocument );</script>
 		
 				<table width="96%" border="0"><tr><td>ここには<?php echo mb_strftime('%Y年%m月%d日(%a)%H時%M分%S秒' , $hisid )?>に承認を受けた内容をプレビューしています。</td></tr>
-					<tr><td><iframe name="preview" frameborder="0" width="100%" height="400" id="previewIframe"></iframe></td></tr>
+					<tr><td><iframe name="previewpub" frameborder="0" width="100%" style="height:400px;" id="previewIframe"
+			src="<?php echo $modx->config['site_url'];?>index.php?id=<?php echo $_GET['docid'];?>&hisid=<?php echo $_GET['hisid'];?>&manprev=z"></iframe></td></tr>
 		
 				</table>
 			</div><!-- end #tabSettings -->
