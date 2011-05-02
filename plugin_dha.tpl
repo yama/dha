@@ -563,7 +563,7 @@ switch($e->name)
 			$sql .= " AND ";
 			$sql .= " tvc.editedon = '" . $publish_history_id . "'";
 		}
-		$rs= $modx->dbQuery($sql);
+		$rs= $modx->db->query($sql);
 		$rowCount= $modx->recordCount($rs);
 		if ($rowCount > 0) {
 			for ($i= 0; $i < $rowCount; $i++) {
