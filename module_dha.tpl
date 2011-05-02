@@ -52,7 +52,7 @@ class DHA
 		$request_err_flag = 0;
 		
 		// コンテンツID
-		if(isset($_REQUEST['contid'])) $docid = intval($_REQUEST['contid']);
+		if(isset($_REQUEST['docid'])) $docid = intval($_REQUEST['docid']);
 		else
 		{
 			$docid=0;
@@ -352,7 +352,7 @@ class DHA
 			fucus_sel = document.getElementById( selname );   
 			select_number = fucus_sel.selectedIndex;
 			select_value  = fucus_sel.options[select_number].value;
-			url = "<?php echo "index.php?a=112&id=$module_id&contid=$docid&hisid="; ?>" + select_value;
+			url = "<?php echo "index.php?a=112&id=$module_id&docid=$docid&hisid="; ?>" + select_value;
 			location.href = url;
 		}
 		
@@ -361,7 +361,7 @@ class DHA
 			select_number = fucus_sel.selectedIndex;
 			select_value  = fucus_sel.options[select_number].value;
 			if ( window.confirm("編集中の内容を指定した日時の状態に戻します。\n現在の内容に再度、戻すことはできません。\nよろしいですか?") ) {
-				url = "<?php echo "index.php?a=112&id=$module_id&contid=$docid&hisid="; ?>" + select_value + "&rolesw=role";
+				url = "<?php echo "index.php?a=112&id=$module_id&docid=$docid&hisid="; ?>" + select_value + "&rolesw=role";
 				location.href = url;
 			}
 		
@@ -370,7 +370,7 @@ class DHA
 		</script>
 		<br />
 		<form name="history" id="contentHistory" method="post" enctype="multipart/form-data" action="index.php">
-		<input type="hidden" name="contid" value="<?php echo $docid; ?>" />
+		<input type="hidden" name="docid" value="<?php echo $docid; ?>" />
 		<input type="hidden" name="hisid"  value="<?php echo $hisid; ?>" />
 		
 		
@@ -445,7 +445,7 @@ class DHA
 		
 				<table width="96%" border="0"><tr><td>ここには<?php echo mb_strftime('%Y年%m月%d日(%a)%H時%M分%S秒' , $hisid )?>に承認を受けた内容をプレビューしています。</td></tr>
 					<tr><td><iframe name="previewpub" frameborder="0" width="100%" style="height:400px;" id="previewIframe"
-			src="<?php echo $modx->config['site_url'];?>index.php?id=<?php echo $_GET['docid'];?>&hisid=<?php echo $_GET['hisid'];?>&manprev=z"></iframe></td></tr>
+			src="<?php echo $modx->config['site_url'];?>index.php?id=<?php echo $docid; ?>&hisid=<?php echo $_GET['hisid'];?>&manprev=z"></iframe></td></tr>
 		
 				</table>
 			</div><!-- end #tabSettings -->

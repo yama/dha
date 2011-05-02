@@ -62,7 +62,7 @@ $a_approval = get_a_approval($config['approval_level']);
 // ----------------------------------------------------------------
 // 処理すべきレベルのON/OFFコントロール
 // ----------------------------------------------------------------
-$level_onoff = level_onoff($config,$current_role);
+$level_onoff = level_onoff($config['approval_level'],$level_and_role,$current_role);
 
 // --------------------------------------------------------------------------------------------------------------------------------
 // メイン処理開始
@@ -89,7 +89,7 @@ switch($e->name)
 		$pub_level = $count + 1;
 		$approval_value = 0;
 		$record_exit_flag = 0;
-		if ( ( $level_onoff [ $pub_level ] == 1 ) || (!$permission) )
+		if ( ($level_onoff[ $pub_level ] == 1 ) || (!$permission) )
 		{
 			// フォームから値を取得
 			$form_name  = 'approval_and_level' . $pub_level;
@@ -116,6 +116,7 @@ switch($e->name)
 			}
 			else
 			{
+				unset($fields);
 				$fields['id']       = $docid;
 				$fields['level']    = $pub_level;
 				$fields['approval'] = $s_approval;
@@ -134,6 +135,7 @@ switch($e->name)
 					// 承認履歴更新
 					// SQL文構築
 					$user_id = $modx->getLoginUserID();
+					$fields['id']       = $docid;
 					$fields = array(
 						'id'	=> $docid,
 						'level'	=> $pub_level,
@@ -326,8 +328,10 @@ switch($e->name)
 
 	// データ取り出し
 	$a_role_list = array();
-	if( $modx->db->getRecordCount( $result ) >= 1 ) {
-		while( $row = $modx->db->getRow( $result ) ) {
+	if( $modx->db->getRecordCount( $result ) >= 1 )
+	{
+		while( $row = $modx->db->getRow( $result ) )
+		{
 			$a_role_list[ $row['id'] ] = $row['name'];
 		}
 	}
@@ -335,38 +339,24 @@ switch($e->name)
 
 	// 承認履歴をゲット
 	// ----------------------------------------------------------------
-	// SQL文構築
-	$sql_string_where  = "";
-	$sql_string_where .= " id='$docid' AND ";
-	$sql_string_where .= " ( ";
-
 	$a_add_level = array();
-	for ( $count = 0 ; $count < $config['approval_level'] ; $count ++ ) {
+	for ( $count = 0 ; $count < $config['approval_level'] ; $count ++ )
+	{
 		$a_add_level[] = " level=" . ( $count + 1 ) . " ";
 	}
-	$sql_string_where .= implode( " OR " , $a_add_level );
-
-	$sql_string_where .= " ) ";
-
-	$sql_string_orderby = " editedon desc ";
-
-
-
-	// SQL発行
-	$his_result = $modx->db->select('*', $tbl_approval_logs , $sql_string_where , $sql_string_orderby );
+	$where = implode( " OR " , $a_add_level );
+	$where = " id='$docid' AND ( " . $where . " ) ";
+	$his_result = $modx->db->select('*', $tbl_approval_logs , $where , " editedon desc ");
 
 	// データ取り出し
-	$s_history = "";
-	$s_history .= '<div class="split"></div>';
+	$s_history  = '<div class="split"></div>';
 	$s_history .= '<span class="warning">現在の承認状況</span>';
 	$s_history .= '<ul>';
 	for ( $count = 0 ; $count < $config['approval_level'] ; $count ++ ) { 
 		$pub_level = $count + 1;
 		$approval_value = 0;
 		if ( isset ( $a_approval[ $pub_level ] ) ) $approval_value = $a_approval[ $pub_level ];
-		$s_history .= '<li>';
-		$s_history .= $level_and_mes [ $pub_level ] . ':' . $a_approval_string [ $approval_value ] . '<br />';
-		$s_history .= '</li>';
+		$s_history .= '<li>' . $level_and_mes [ $pub_level ] . ':' . $a_approval_string [ $approval_value ] . '</li>';
 	}
 	$s_history .= '</ul>';
 
@@ -397,13 +387,15 @@ switch($e->name)
 <div style="overflow:hidden;zoom:1;">
 		<table width="550" border="0" cellspacing="0" cellpadding="0">
 <?php
-
-	if ($permission) {
-		for ( $count = 0 ; $count < $config['approval_level'] ; $count ++ ) { 
+	if($permission)
+	{
+		for ( $count = 0 ; $count < $config['approval_level'] ; $count ++ )
+		{
 			$pub_level = $count + 1;
 			$approval_value = 0;
 			if ( isset ( $a_approval[ $pub_level ] ) ) $approval_value = $a_approval[ $pub_level ];
-			if ( $level_onoff [ $pub_level ] == 1 ) {
+			if ($level_onoff[$pub_level] == 1 )
+			{
 ?>
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $level_and_mes [ $pub_level ]?></span></td>
 				<td><select name="approval_and_level<?php echo $pub_level?>" onchange="documentDirty=true;">
@@ -467,7 +459,7 @@ switch($e->name)
 	<span class="right">ドキュメントの更新履歴/差分表示</span>
 
 	<div class="actionButtons" style="padding:7px 0;">
-		<a href="<?php echo "index.php?a=112&id=$module_id&contid=$docid&hisid=$publish_history_id"; ?>"><img src="<?php echo $style_path; ?>icons/logging.gif" /> 編集中ドキュメントの更新履歴/差分表示</a>
+		<a href="<?php echo "index.php?a=112&id=$module_id&docid=$docid&hisid=$publish_history_id"; ?>"><img src="<?php echo $style_path; ?>icons/logging.gif" /> 編集中ドキュメントの更新履歴/差分表示</a>
 	</div>
 </div>
 </div>

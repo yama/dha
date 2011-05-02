@@ -11,18 +11,15 @@ $tbl_user_role              = $modx->getFullTableName( 'user_roles' );          
 $tbl_approval_logs          = $modx->getFullTableName( 'approval_logs' );                         // 多段階承認履歴テーブル
 $tbl_module                 = $modx->getFullTableName( 'site_modules' );                          // モジュールテーブル
 
-function level_onoff($config,$current_role)
+function level_onoff($approval_level,$level_and_role,$current_role)
 {
 	$level_onoff = array();
-	for ($count = 0 ; $count < $config['approval_level'] ; $count ++ ) {
-		$check_role = explode( "/" , $level_and_role [ $count + 1 ] );
+	for ($count = 0 ; $count < $approval_level ; $count ++ ) {
+		$check_role = explode( "/" , $level_and_role[$count + 1]);
 		$level_onoff [ $count + 1 ] = 0;
 		for ($chk_count = 0 ; $chk_count < count($check_role) ; $chk_count ++ ) {
 			// 当該のレベルに属するRoleの場合はON
 			if($check_role [ $chk_count ] == $current_role ) $level_onoff [ $count + 1 ] = 1;
-	
-			// admin権限は問答無用にすべてON
-	//		if($current_role == "1" ) $level_onoff [ $count + 1 ] = 1;
 		}
 	}
 	return $level_onoff;
